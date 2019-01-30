@@ -195,12 +195,31 @@ $(function () {
 		bindEvents: function () {
 			$('#register_form').on('submit', Auth.register.bind(this));
 			$('#login_form').on('submit', Auth.login.bind(this));
+			$('#new-todos-list').on('submit', App.todoLists.addTodoList.bind(this));
 		},
 		bindTodoListsEvent: function () {
 			$('.remove-todo-list').unbind().on('click', App.todoLists.removeTodoList.bind(this));
 			$('.edit-todo-list').unbind().on('click', App.todoLists.editTodoList.bind(this));
 		},
 		todoLists: {
+			addTodoList(e) {
+				e.preventDefault();
+
+				const formData = new FormData($('#new-todos-list')[0]);
+
+				App.showPreloader();
+
+				axios
+					.post('/todos', formData)
+					.then(function (response) {
+
+						$('.todos-list').prepend(
+							App.todoLists.getTemplate(response.data.todoList)
+						);
+
+						App.hidePreloader();
+					});
+			},
 			removeTodoList(e) {
 				e.preventDefault();
 
