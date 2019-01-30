@@ -161,15 +161,12 @@ $(function () {
 				axios.get('/todos')
 					.then(function (response) {
 						response.data.todoLists.forEach(function (todoList, index) {
-							const template = App.todoListTemplate({
-								id: todoList.id,
-								title: todoList.title,
-								createdAt: moment(todoList.createdAt).format('DD.MM.YY HH:mm'),
-								updatedAt: moment(todoList.updatedAt).format('DD.MM.YY HH:mm'),
-							});
-
-							$('.todos-list').append(template);
+							$('.todos-list').append(
+								App.todoLists.getTemplate(todoList)
+							);
 						});
+
+						App.bindTodoListsEvent();
 
 						App.hidePreloader();
 					});
@@ -199,6 +196,65 @@ $(function () {
 			$('#register_form').on('submit', Auth.register.bind(this));
 			$('#login_form').on('submit', Auth.login.bind(this));
 		},
+		bindTodoListsEvent: function () {
+			$('.remove-todo-list').unbind().on('click', App.todoLists.removeTodoList.bind(this));
+			$('.edit-todo-list').unbind().on('click', App.todoLists.editTodoList.bind(this));
+		},
+		todoLists: {
+			removeTodoList(e) {
+				e.preventDefault();
+
+				const $element = $(e.target);
+				const id = $element.parent().data('id');
+
+				App.showPreloader();
+
+				axios
+					.delete('/todos/' + id)
+					.then(function (response) {
+						App.hidePreloader();
+
+						$element.parent().remove();
+					})
+			},
+			editTodoList(e) {
+				e.preventDefault();
+
+				const $element = $(e.target);
+				const id = $element.parent().data('id');
+				const title = $element.parent().data('title');
+
+				const newTitle = prompt('Enter new title', title);
+
+				if (!newTitle) {
+					return;
+				}
+
+				App.showPreloader();
+
+				axios
+					.patch('/todos/' + id, {
+						title: newTitle
+					})
+					.then(function (response) {
+						App.hidePreloader();
+
+						const todoList = response.data.todoList;
+
+						$element.parent().replaceWith(App.todoLists.getTemplate(todoList));
+
+						App.bindTodoListsEvent();
+					})
+			},
+			getTemplate: function (todoList) {
+				return App.todoListTemplate({
+					id: todoList.id,
+					title: todoList.title,
+					createdAt: moment(todoList.createdAt).format('DD.MM.YY HH:mm'),
+					updatedAt: moment(todoList.updatedAt).format('DD.MM.YY HH:mm'),
+				});
+			}
+		}
 	};
 
 	const Auth = {

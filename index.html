@@ -67,10 +67,12 @@
 		</footer>
 
 	<script id="todo-list-template" type="text/x-handlebars-template">
-		<li>
+		<li data-id="{{id}}" data-title="{{title}}">
 			<a href="#/todos/{{id}}" class="link">{{title}}</a>
-			<span class="updated-at">{{createdAt}}</span>
-			<span class="created-at">{{updatedAt}}</span>
+			<a href="#" class="edit-todo-list link">edit</a>
+			<a href="#" class="remove-todo-list link">remove</a>
+			<span class="updated-at">{{updatedAt}}</span>
+			<span class="created-at">{{createdAt}}</span>
 		</li>
 	</script>
 	<script id="todo-template" type="text/x-handlebars-template">
