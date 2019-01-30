@@ -1,0 +1,88 @@
+#preloader {
+	position: fixed;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	top: 0;
+	z-index: 999;
+	opacity: 0.4;
+	background: #dedede url("../imagesreloader.gif") no-repeat center;
+}
+
+.error-message {
+	text-align: center;
+	margin-top: 10px;
+	color: #d20000;
+}
+
+.todoapp, .app-footer, .register, .todos, .user-info, .login {
+	display: none;
+}
+
+.login, .register {
+	margin: 100px auto 0;
+	width: 300px;
+	text-align: center;
+}
+
+.form-input {
+	width: 100%;
+	padding: 12px;
+	box-sizing: border-box;
+	margin-bottom: 10px;
+}
+
+.form-button {
+	padding: 16px;
+	border: 0;
+	font-size: 15px;
+	cursor: pointer;
+	width: 100%;
+	margin-bottom: 10px;
+}
+
+.link {
+	color: #555;
+}
+
+.user-info a {
+	color: #8a7777;
+}
+
+.navigation {
+	display: none;
+	text-align: center;
+	margin-top: 10px;
+}
+
+.todos h1 {
+	text-align: center;
+}
+
+.todos-list-header {
+	font-weight: bold;
+}
+
+.todos-list {
+	margin: 0;
+	padding: 0;
+	list-style: none;
+	line-height: 1.5;
+}
+
+.remove-todo-list, .edit-todo-list {
+	font-size: 12px;
+	margin-left: 5px;
+}
+
+.created-at, .updated-at {
+	display: block;
+	float: right;
+	margin-left: 10px;
+	min-width: 93px;
+}
+
+#new-todos-list {
+	margin: 50px auto 0;
+	width: 300px;
+}
