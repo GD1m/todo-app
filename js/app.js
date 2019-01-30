@@ -1,8 +1,6 @@
 $(function () {
 	'use strict';
 
-	const API_URL = 'http://localhost/app/v1';
-
 	Handlebars.registerHelper('eq', function (a, b, options) {
 		return a === b ? options.fn(this) : options.inverse(this);
 	});
@@ -18,26 +16,30 @@ $(function () {
 
 	const App = {
 		init: function () {
-			this.todoListTemplate = Handlebars.compile($('#todo-list-template').html());
+			axios.get('/config.json').then(function (response) {
+				App.todoListTemplate = Handlebars.compile($('#todo-list-template').html());
 
-			this.initAxios();
+				App.config = response.data;
 
-			this.router = Router(this.routes());
+				App.initAxios();
 
-			const authToken = localStorage.getItem('authToken');
+				App.router = Router(App.routes());
 
-			if (authToken) {
-				App.state.setAuthToken(authToken);
+				const authToken = localStorage.getItem('authToken');
 
-				axios.get('/users/me')
-					.then(function (response) {
-						App.state.setUser(response.data.user);
+				if (authToken) {
+					App.state.setAuthToken(authToken);
 
-						App.afterUserInitialized();
-					});
-			} else {
-				App.afterUserInitialized();
-			}
+					axios.get('/users/me')
+						.then(function (response) {
+							App.state.setUser(response.data.user);
+
+							App.afterUserInitialized();
+						});
+				} else {
+					App.afterUserInitialized();
+				}
+			});
 		},
 		afterUserInitialized: function () {
 			this.bindEvents();
@@ -53,7 +55,7 @@ $(function () {
 			}
 		},
 		initAxios: function () {
-			axios.defaults.baseURL = this.params.baseURL;
+			axios.defaults.baseURL = this.config.apiUrl;
 
 			axios.interceptors.response.use(function (response) {
 				return response;
@@ -74,9 +76,6 @@ $(function () {
 
 				return error;
 			});
-		},
-		params: {
-			baseURL: API_URL,
 		},
 		showPreloader: function () {
 			$('#preloader').show();
