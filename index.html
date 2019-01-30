@@ -3,73 +3,110 @@
 	<head>
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1">
-		<title>Template • TodoMVC</title>
+		<title>TodoMVC</title>
 		<link rel="stylesheet" href="node_modules/todomvc-common/base.css">
 		<link rel="stylesheet" href="node_modules/todomvc-app-css/index.css">
-		<!-- CSS overrides - remove if you don't need it -->
 		<link rel="stylesheet" href="css/app.css">
 	</head>
 	<body>
-		<section class="todoapp">
-			<header class="header">
-				<h1>todos</h1>
-				<input class="new-todo" placeholder="What needs to be done?" autofocus>
-			</header>
-			<!-- This section should be hidden by default and shown when there are todos -->
-			<section class="main">
-				<input id="toggle-all" class="toggle-all" type="checkbox">
-				<label for="toggle-all">Mark all as complete</label>
-				<ul class="todo-list">
-					<!-- These are here just to show the structure of the list items -->
-					<!-- List items should get the class `editing` when editing and `completed` when marked as completed -->
-					<li class="completed">
-						<div class="view">
-							<input class="toggle" type="checkbox" checked>
-							<label>Taste JavaScript</label>
-							<button class="destroy"></button>
-						</div>
-						<input class="edit" value="Create a TodoMVC template">
-					</li>
-					<li>
-						<div class="view">
-							<input class="toggle" type="checkbox">
-							<label>Buy a unicorn</label>
-							<button class="destroy"></button>
-						</div>
-						<input class="edit" value="Rule the web">
-					</li>
-				</ul>
-			</section>
-			<!-- This footer should hidden by default and shown when there are todos -->
-			<footer class="footer">
-				<!-- This should be `0 items left` by default -->
-				<span class="todo-count"><strong>0</strong> item left</span>
-				<!-- Remove this if you don't implement routing -->
-				<ul class="filters">
-					<li>
-						<a class="selected" href="#/">All</a>
-					</li>
-					<li>
-						<a href="#/active">Active</a>
-					</li>
-					<li>
-						<a href="#/completed">Completed</a>
-					</li>
-				</ul>
-				<!-- Hidden if no completed items are left ↓ -->
-				<button class="clear-completed">Clear completed</button>
-			</footer>
+	<div id="preloader"></div>
+
+	<section class="error-message"></section>
+
+	<section class="login">
+		<form id="login_form">
+			<input type="text" name="username" placeholder="Username" class="form-input"/>
+			<input type="password" name="password" placeholder="Password" class="form-input"/>
+			<input type="submit" value="Sign In" class="form-button"/>
+		</form>
+		<a href="#/register" class="link">Sign Up</a>
+	</section>
+	<section class="register">
+		<form id="register_form">
+			<input type="text" name="username" placeholder="Username" class="form-input"/>
+			<input type="password" name="password" placeholder="Password" class="form-input"/>
+			<input type="password" name="confirmPassword" placeholder="Confirm Password" class="form-input"/>
+			<input type="submit" value="Sign Up" class="form-button"/>
+		</form>
+		<a href="#/login" class="link">Sign In</a>
+	</section>
+	<section class="todos">
+		<h1>Your Todo Lists:</h1>
+		<div class="todos-list-header">
+			Title:
+			<span class="updated-at">Updated:</span>
+			<span class="created-at">Created:</span>
+		</div>
+
+		<ul class="todos-list">
+
+		</ul>
+	</section>
+	<section class="navigation">
+		<a href="#/list" class="link">Back</a>
+	</section>
+	<section class="todoapp">
+		<header class="header">
+			<h1>todos</h1>
+			<input class="new-todo" placeholder="What needs to be done?" autofocus>
+		</header>
+		<section class="main">
+			<input id="toggle-all" class="toggle-all" type="checkbox">
+			<label for="toggle-all">Mark all as complete</label>
+			<ul class="todo-list"></ul>
 		</section>
+		<footer class="footer"></footer>
+	</section>
 		<footer class="info">
+			<section class="user-info">
+				<p><a href="#/logout">Logout (<span class="username"></span>)</a></p>
+			</section>
 			<p>Double-click to edit a todo</p>
-			<!-- Remove the below line ↓ -->
-			<p>Template by <a href="http://sindresorhus.com">Sindre Sorhus</a></p>
-			<!-- Change this out with your name and url ↓ -->
-			<p>Created by <a href="http://todomvc.com">you</a></p>
+			<p>Created by <a href="https://github.com/gd1m">Dmitry Golovachev</a></p>
 			<p>Part of <a href="http://todomvc.com">TodoMVC</a></p>
 		</footer>
-		<!-- Scripts here. Don't remove ↓ -->
-		<script src="node_modules/todomvc-common/base.js"></script>
-		<script src="js/app.js"></script>
+
+	<script id="todo-list-template" type="text/x-handlebars-template">
+		<li>
+			<a href="#/todos/{{id}}" class="link">{{title}}</a>
+			<span class="updated-at">{{createdAt}}</span>
+			<span class="created-at">{{updatedAt}}</span>
+		</li>
+	</script>
+	<script id="todo-template" type="text/x-handlebars-template">
+		{{#this}}
+		<li {{#if completed}}class="completed"{{/if}} data-id="{{id}}">
+		<div class="view">
+			<input class="toggle" type="checkbox" {{#if completed}}checked{{/if}}>
+			<label>{{title}}</label>
+			<button class="destroy"></button>
+		</div>
+		<input class="edit" value="{{title}}">
+		</li>
+		{{/this}}
+	</script>
+	<script id="footer-template" type="text/x-handlebars-template">
+		<span class="todo-count"><strong>{{activeTodoCount}}</strong> {{activeTodoWord}} left</span>
+		<ul class="filters">
+			<li>
+				<a {{#eq filter 'all'}}class="selected"{{/eq}} href="#/todos/{{todoList.id}}/all">All</a>
+			</li>
+			<li>
+				<a {{#eq filter 'active'}}class="selected"{{/eq}}href="#/todos/{{todoList.id}}/active">Active</a>
+			</li>
+			<li>
+				<a {{#eq filter 'completed'}}class="selected"{{/eq}}href="#/todos/{{todoList.id}}/completed">Completed</a>
+			</li>
+		</ul>
+		{{#if completedTodos}}<button class="clear-completed">Clear completed</button>{{/if}}
+	</script>
+
+	<script src="node_modules/todomvc-common/base.js"></script>
+	<script src="node_modules/jquery/dist/jquery.min.js"></script>
+	<script src="node_modules/director/build/director.min.js"></script>
+	<script src="node_modules/axios/dist/axios.min.js"></script>
+	<script src="node_modules/handlebars/dist/handlebars.min.js"></script>
+	<script src="node_modules/moment/min/moment.min.js"></script>
+	<script src="js/app.js"></script>
 	</body>
 </html>
