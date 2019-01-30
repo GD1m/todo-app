@@ -1,4 +1,7 @@
 {
+  "name": "todo-app",
+  "version": "0.0.1",
+  "description": "Simple TODO application",
   "private": true,
   "dependencies": {
     "axios": "^0.18.0",

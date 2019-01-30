@@ -6,7 +6,7 @@
 	top: 0;
 	z-index: 999;
 	opacity: 0.4;
-	background: #dedede url("./../images/preloader.gif") no-repeat center;
+	background: #dedede url("../imagesreloader.gif") no-repeat center;
 }
 
 .error-message {
