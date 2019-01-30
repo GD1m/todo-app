@@ -1,35 +1,23 @@
-# Framework Name • [TodoMVC](http://todomvc.com)
+# Simple TODO application based on [TodoMVC](http://todomvc.com)
 
-> Official description of the framework (from its website)
+## Installation Guide
 
+- clone this repository
+- `cd ./public`
+- `npm install`
+- `cp config.json.example config.json`
+- edit config.json
+- return to root directory (`$ cd ..`)
+- `cd ./docker`
+- `cp .env.example .env`
+- edit docker env config (./docker/.env)
+- `docker-compose up -d`
 
-## Resources
+And you are done.
 
-- [Website]()
-- [Documentation]()
-- [Used by]()
-- [Blog]()
-- [FAQ]()
+Application will be available on configured port (80 by default) and host (localhost by default).
 
-### Articles
-
-- [Interesting article]()
-
-### Support
-
-- [Stack Overflow](http://stackoverflow.com/questions/tagged/__)
-- [Google Groups]()
-- [Twitter](http://twitter.com/__)
-- [Google+]()
-
-*Let us [know](https://github.com/tastejs/todomvc/issues) if you discover anything worth sharing.*
+## See also
+* [https://github.com/GD1m/todo-api](https://github.com/GD1m/todo-api)
 
 
-## Implementation
-
-How was the app created? Anything worth sharing about the process of creating the app? Any spec violations?
-
-
-## Credit
-
-Created by [Your Name](http://your-website.com)
