@@ -46,7 +46,7 @@ $(function () {
 
 			$('.info').show();
 
-			this.router.init('/list');
+			this.router.init('/login');
 
 			App.hidePreloader();
 
@@ -150,6 +150,10 @@ $(function () {
 				$('.login').show();
 			},
 			showTodoLists: function () {
+				if (!App.state.authenticated) {
+					App.router.setRoute('/login')
+				}
+
 				$('.register, .login, .todoapp, .navigation').hide();
 				$('.todos').show();
 
@@ -159,18 +163,24 @@ $(function () {
 
 				axios.get('/todos')
 					.then(function (response) {
-						response.data.todoLists.forEach(function (todoList, index) {
-							$('.todos-list').append(
-								App.todoLists.getTemplate(todoList)
-							);
-						});
+						if (response.data && response.data.todoLists) {
+							response.data.todoLists.forEach(function (todoList, index) {
+								$('.todos-list').append(
+									App.todoLists.getTemplate(todoList)
+								);
+							});
 
-						App.bindTodoListsEvent();
+							App.bindTodoListsEvent();
+						}
 
 						App.hidePreloader();
 					});
 			},
 			showTodoList: function (uuid) {
+				if (!App.state.authenticated) {
+					App.router.setRoute('/login')
+				}
+
 				$('.register, .login, .todos').hide();
 				$('.todoapp, .navigation').show();
 
@@ -183,7 +193,9 @@ $(function () {
 				axios
 					.get('/todos/' + uuid)
 					.then(function (response) {
-						TodoList.setTodoList(response.data.todoList);
+						if (response.data && response.data.todoList) {
+							TodoList.setTodoList(response.data.todoList);
+						}
 
 						TodoList.render();
 
